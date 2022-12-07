@@ -5,6 +5,22 @@ defmodule Advent2022 do
   use Application
   alias Advent2022.CrateState
 
+
+  def part2({state, instructions}) do
+    CrateState.set_state(CrateState, state)
+
+    instructions
+    |> Enum.each(fn {how_many, from, to} ->
+      CrateState.move2(CrateState, how_many, from, to)
+    end)
+
+    CrateState.state(CrateState)
+    |> Enum.map(fn stack ->
+      stack
+      |> Enum.at(0)
+    end)
+  end
+
   def part1({state, instructions}) do
     CrateState.set_state(CrateState, state)
 
@@ -112,6 +128,9 @@ defmodule Advent2022 do
     |> parse_instructions()
 
     part1({state, instructions})
+    |> IO.inspect()
+
+    part2({state, instructions})
     |> IO.inspect()
 
     Application.stop(:advent_2022)

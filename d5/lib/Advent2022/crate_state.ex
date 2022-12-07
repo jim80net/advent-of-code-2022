@@ -26,6 +26,11 @@ defmodule Advent2022.CrateState do
     move(pid, howmany - 1, from, to)
   end
 
+  @doc "Move a crate from one stack to another, but do not change the order of the crates"
+  def move2(pid, howmany, from, to) do
+    GenServer.cast(pid, {:move2, howmany, from, to})
+  end
+
   # Server (callbacks)
 
   @impl true
@@ -51,6 +56,18 @@ defmodule Advent2022.CrateState do
       state
       |> List.replace_at(from, from_tail)
       |> List.replace_at(to, [from_head | Enum.at(state, to)])
+
+    {:noreply, newstate}
+  end
+
+  @impl true
+  def handle_cast({:move2, howmany, from, to}, state) do
+    {from_head, from_tail} = Enum.at(state, from) |> Enum.split(howmany)
+
+    newstate =
+      state
+      |> List.replace_at(from, from_tail)
+      |> List.replace_at(to, Enum.at(state, to) |> List.insert_at(0, from_head) |> List.flatten)
 
     {:noreply, newstate}
   end

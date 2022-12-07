@@ -2,6 +2,19 @@ defmodule Advent2022Test do
   use ExUnit.Case
   doctest Advent2022
 
+  test "part2" do
+    state = ['NZ', 'DCM', 'P']
+    instructions = [
+      {1, 1, 0},
+      {3, 0, 2},
+      {2, 1, 0},
+      {1, 0, 1}
+    ]
+    # ['M', 'C', 'DNZP']
+
+    assert Advent2022.part2({state, instructions}) == 'MCD'
+  end
+
   test "part1" do
     state = ['NZ', 'DCM', 'P']
     instructions = [
