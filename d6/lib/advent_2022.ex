@@ -4,14 +4,34 @@ defmodule Advent2022 do
   """
   use Application
 
+  def part2(charlist) do
+    # IO.inspect("Evaluating #{charlist}")
+    {first_thirteen, rest} = Enum.split(charlist, 13)
+    initial_mem = Enum.reverse(first_thirteen)
+    rest
+    |> Enum.reduce_while({initial_mem, 12}, fn element, acc ->
+        {mem, count} = acc
+        # IO.inspect({element, mem, count})
+        if [element | mem] == Enum.uniq([element | mem]) do
+          {:halt, count + 2}
+        else
+          newmem = [element | mem]
+          |> Enum.take(13)
+          {:cont, {newmem, count + 1}}
+        end
+      end)
+  end
+ 
+
+
   def part1(charlist) do
-    IO.inspect("Evaluating #{charlist}")
+    # IO.inspect("Evaluating #{charlist}")
     {first_three, rest} = Enum.split(charlist, 3)
     initial_mem = Enum.reverse(first_three)
     rest
-    |> Enum.reduce_while({initial_mem, 0}, fn element, acc ->
+    |> Enum.reduce_while({initial_mem, 2}, fn element, acc ->
         {mem, count} = acc
-        IO.inspect({element, mem, count})
+        # IO.inspect({element, mem, count})
         if [element | mem] == Enum.uniq([element | mem]) do
           {:halt, count + 2}
         else
@@ -61,13 +81,14 @@ defmodule Advent2022 do
     
     read_input('input')
     |> parse_input()
+    |> part1()
     |> IO.inspect()
 
-    # part1({state, instructions})
-    # |> IO.inspect()
+    read_input('input')
+    |> parse_input()
+    |> part2()
+    |> IO.inspect()
 
-    # part2({state, instructions})
-    # |> IO.inspect()
 
     Application.stop(:advent_2022)
   end
